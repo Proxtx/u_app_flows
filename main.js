@@ -24,11 +24,18 @@ export class App {
 
     for (let functionName in this.definitions.methods)
       delete this[functionName];
+    this.updateDefinitions.methods = {};
 
     if (!result.result.success) return;
 
-    let flows = JSON.parse(result.result.response).data;
-    this.updateDefinitions.methods = {};
+    let flows;
+    try {
+      flows = JSON.parse(result.result.response).data;
+    } catch {
+      return;
+    }
+
+    if (!flows) return;
 
     for (let flowName of flows) {
       this.definitions.methods[flowName] = {
