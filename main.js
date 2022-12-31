@@ -9,7 +9,7 @@ export class App {
   }
 
   async updateDefinitions() {
-    if (!this.client) this.findClient();
+    if (!this.client) await this.findClient();
     if (!this.client) return;
     let result = await this.client.request("http", "request", [
       "POST",
