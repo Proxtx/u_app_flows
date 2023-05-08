@@ -49,7 +49,7 @@ export class App {
           this.config.url,
           JSON.stringify({
             arguments: [this.config.pwd, flowName],
-            export: "runFlow",
+            export: "runFlowSync",
             module: "public/flow.js",
           }),
           "application/json",
