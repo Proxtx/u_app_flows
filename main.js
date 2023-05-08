@@ -53,6 +53,7 @@ export class App {
             module: "public/flow.js",
           }),
           "application/json",
+          10000000,
         ]);
       };
     }
