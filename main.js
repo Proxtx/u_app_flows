@@ -39,17 +39,23 @@ export class App {
 
     for (let flowName of flows) {
       this.definitions.methods[flowName] = {
-        arguments: [],
+        arguments: [
+          {
+            type: "bool",
+            value: false,
+            name: "Async",
+          },
+        ],
         name: flowName,
       };
 
-      this[flowName] = async () => {
+      this[flowName] = async (async) => {
         return await this.client.request("http", "request", [
           "POST",
           this.config.url,
           JSON.stringify({
             arguments: [this.config.pwd, flowName],
-            export: "runFlowSync",
+            export: "runFlow" + (async ? "" : "Sync"),
             module: "public/flow.js",
           }),
           "application/json",
