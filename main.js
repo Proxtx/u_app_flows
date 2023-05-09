@@ -24,7 +24,7 @@ export class App {
 
     for (let functionName in this.definitions.methods)
       delete this[functionName];
-    this.updateDefinitions.methods = {};
+    this.definitions.methods = {};
 
     if (!result.result.success) return;
 
