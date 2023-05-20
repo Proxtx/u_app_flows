@@ -17,7 +17,7 @@ export class App {
       JSON.stringify({
         arguments: [this.config.pwd],
         export: "listFlows",
-        module: "public/flow.js",
+        module: "public/api.js",
       }),
       "application/json",
     ]);
@@ -45,22 +45,40 @@ export class App {
             value: false,
             name: "Async",
           },
+          ...JSON.parse(
+            (
+              await this.client.request("http", "request", [
+                "POST",
+                this.config.url,
+                JSON.stringify({
+                  arguments: [this.config.pwd, flowName],
+                  export: "getFlowArguments",
+                  module: "public/api.js",
+                }),
+                "application/json",
+              ])
+            ).result.response
+          ).data,
         ],
         name: flowName,
       };
 
-      this[flowName] = async (async) => {
-        return await this.client.request("http", "request", [
-          "POST",
-          this.config.url,
-          JSON.stringify({
-            arguments: [this.config.pwd, flowName],
-            export: "runFlow" + (async ? "" : "Sync"),
-            module: "public/flow.js",
-          }),
-          "application/json",
-          10000000,
-        ]);
+      this[flowName] = async function (async, ...args) {
+        return JSON.parse(
+          (
+            await this.client.request("http", "request", [
+              "POST",
+              this.config.url,
+              JSON.stringify({
+                arguments: [this.config.pwd, flowName, args],
+                export: "runFlow" + (async ? "" : "Sync"),
+                module: "public/api.js",
+              }),
+              "application/json",
+              10000000,
+            ])
+          ).result.response
+        ).data;
       };
     }
   }
